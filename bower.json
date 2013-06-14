@@ -2,6 +2,8 @@
   "name": "client",
   "version": "0.0.0",
   "dependencies": {
-    "socket.io-client": "~0.9.16"
-  }
+    "modernizr": "~2.6.2",
+    "jquery": "~1.9.1"
+  },
+  "devDependencies": {}
 }
