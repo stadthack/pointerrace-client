@@ -3,35 +3,49 @@
   'use strict';
 
   var socket = io.connect('http://localhost:8080');
-  var ConnectionState = function () {
+  var PlayerState = function () {
     this.startup();
   };
 
   StateMachine.create({
-    target: ConnectionState.prototype,
+    target: PlayerState.prototype,
     events: [
       { name: 'startup', from: 'none', to: 'connecting' },
-      { name: 'connected', from: 'connecting', to: 'connected' }
+      { name: 'connect', from: 'connecting', to: 'connected' }
     ]
   });
 
   function Player() {
     this.uuid = null;
-    this.state = new ConnectionState();
+    this.state = new PlayerState();
   }
 
   var players = {
     self: new Player()
   };
 
+  function onServerstate(data) {
+    console.log('server state: ', data);
+  }
+
   function onConnected(data) {
     var self = players.self;
 
     self.uuid = data.uuid;
-    self.state.connected();
+    self.state.connect();
 
     console.log('Player state: ', self.state.current);
+
+    // Don't work with server state before player initialization has happened.
+    socket.on('serverstate', onServerstate);
   }
+
+  document.addEventListener('mousemove', function (event) {
+    var x = (event.pageX / document.width * 100).toFixed(2);
+    var y = (event.pageY / document.height * 100).toFixed(2);
+
+    socket.emit('move', { x: x, y: y });
+  });
 
   socket.on('connected', onConnected);
 }());
