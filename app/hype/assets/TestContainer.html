@@ -1,0 +1,44 @@
+<html>
+<head>
+    <style>
+        .level {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+    <script src="../../bower_components/jquery/jquery.js"></script>
+    <script type="text/javascript">
+        function patch(elementId, otherElementId) {
+            var doc = document.getElementById(elementId).contentWindow.hypeDocument();
+            var otherDoc = document.getElementById(otherElementId).contentWindow.hypeDocument();
+
+            function patch(methodName) {
+                var sourceFunc = doc[methodName];
+                var destFunc = otherDoc[methodName];
+                doc[methodName] = function(){
+                    sourceFunc.apply(this, arguments);
+                    destFunc.apply(this, arguments);
+                };
+            }
+
+            patch("startTimelineNamed");
+            patch("pauseTimelineNamed");
+
+        }
+    </script>
+</head>
+    <body>
+    <iframe id="level1" class="level" src="TestLevel.html"></iframe>
+    <iframe id="level2" class="level" src="TestLevel.html"></iframe>
+    </body>
+
+    <script>
+        window.l1 = document.getElementById("level1");
+        // TODO: use robust way to understand when animations are loaded
+        setTimeout(function(){
+            patch("level1", "level2");
+//            patch("level2", "level1");
+        }, 300);
+
+    </script>
+</html>
