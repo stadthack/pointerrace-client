@@ -1,7 +1,5 @@
 // Generated on 2013-06-14 using generator-webapp 0.2.3
 'use strict';
-var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
@@ -45,9 +43,6 @@ module.exports = function (grunt) {
                 tasks: ['copy:styles', 'autoprefixer']
             },
             livereload: {
-                options: {
-                    livereload: LIVERELOAD_PORT
-                },
                 files: [
                     '<%= yeoman.app %>/*.html',
                     '.tmp/styles/{,*/}*.css',
@@ -66,7 +61,6 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
-                            lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app)
                         ];
