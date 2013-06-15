@@ -21,12 +21,12 @@
     this.state = new PlayerState();
   }
 
-  Player.prototype.update = function update(state) {
+  Player.prototype.update = function update(state, isUs) {
     if (!state) {
       console.error('Invalid player state: ', state);
     }
     if (this.pointer === null) {
-      this._initPointer();
+      this._initPointer(isUs);
     }
     var transform = this._getPointerTransform(state);
     this.pointer.style['-webkit-transform'] = transform;
@@ -47,11 +47,15 @@
     return 'translate(' + x + 'px, ' + y + 'px)';
   };
 
-  Player.prototype._initPointer = function _initCursor() {
+  Player.prototype._initPointer = function _initCursor(isUs) {
     console.log('Initializing new Pointer.');
     this.pointer = document.createElement('div');
     this.pointer.className = 'pointer';
-    game.$pointersThem.appendChild(this.pointer);
+    if (isUs) {
+      game.$pointersUs.appendChild(this.pointer);
+    } else {
+      game.$pointersThem.appendChild(this.pointer);
+    }
   };
 
   var players = {
@@ -116,7 +120,7 @@
     var x = (event.pageX / document.body.clientWidth);
     var y = (event.pageY / document.body.clientHeight);
 
-    players.self.update({ x: x, y: y });
+    players.self.update({ x: x, y: y }, true);
     socket.emit('move', { x: x, y: y });
   });
 
