@@ -116,6 +116,7 @@
     var x = (event.pageX / document.body.clientWidth);
     var y = (event.pageY / document.body.clientHeight);
 
+    players.self.update({ x: x, y: y });
     socket.emit('move', { x: x, y: y });
   });
 
