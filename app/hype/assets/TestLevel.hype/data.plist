@@ -22,28 +22,28 @@
 	<key>guidesAreVisible</key>
 	<true/>
 	<key>lastCheckDate</key>
-	<date>2013-06-15T13:19:58Z</date>
+	<date>2013-06-15T14:36:11Z</date>
 	<key>layout</key>
 	<dict>
 		<key>keyframeTimelineHeight</key>
 		<real>50</real>
 		<key>mainWindowFrame</key>
-		<string>19 149 1462 908 0 0 1920 1058 </string>
+		<string>61 139 1462 908 0 0 1920 1058 </string>
 		<key>openTabs</key>
 		<array>
 			<dict>
 				<key>className</key>
 				<string>HypeJavascript</string>
 				<key>oid</key>
-				<string>208</string>
+				<string>209</string>
 			</dict>
 		</array>
 		<key>selectedTabIndex</key>
-		<integer>1</integer>
+		<integer>0</integer>
 		<key>showSceneTabView</key>
 		<true/>
 		<key>splitHeight</key>
-		<real>489</real>
+		<real>662</real>
 		<key>splitViewIsVertical</key>
 		<false/>
 		<key>splitWidth</key>
@@ -69,7 +69,7 @@
 		<string>Latest</string>
 	</dict>
 	<key>oidCounter</key>
-	<integer>208</integer>
+	<integer>209</integer>
 	<key>resources</key>
 	<array/>
 	<key>sceneSize</key>
@@ -2585,13 +2585,13 @@
 							<key>identifier</key>
 							<string>PointerEvents</string>
 							<key>objectValue</key>
-							<string>auto</string>
+							<string>none</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
 							<string>Locked</string>
 							<key>objectValue</key>
-							<string>0</string>
+							<string>1</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
@@ -4369,9 +4369,9 @@
 					<array>
 						<dict>
 							<key>identifier</key>
-							<string>Overflow</string>
+							<string>BorderRadiusTopRight</string>
 							<key>objectValue</key>
-							<string>visible</string>
+							<string>20px</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
@@ -4400,15 +4400,15 @@
 						</dict>
 						<dict>
 							<key>identifier</key>
-							<string>BorderColorBottom</string>
-							<key>objectValue</key>
-							<string>#A0A0A0</string>
-						</dict>
-						<dict>
-							<key>identifier</key>
 							<string>ExplicitDimensions</string>
 							<key>objectValue</key>
 							<string>YES</string>
+						</dict>
+						<dict>
+							<key>identifier</key>
+							<string>BorderColorBottom</string>
+							<key>objectValue</key>
+							<string>#A0A0A0</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
@@ -4532,21 +4532,21 @@
 						</dict>
 						<dict>
 							<key>identifier</key>
+							<string>BorderRadiusBottomLeft</string>
+							<key>objectValue</key>
+							<string>20px</string>
+						</dict>
+						<dict>
+							<key>identifier</key>
 							<string>Locked</string>
 							<key>objectValue</key>
 							<string>0</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
-							<string>BorderRadiusTopRight</string>
+							<string>Overflow</string>
 							<key>objectValue</key>
-							<string>20px</string>
-						</dict>
-						<dict>
-							<key>identifier</key>
-							<string>BorderRadiusBottomLeft</string>
-							<key>objectValue</key>
-							<string>20px</string>
+							<string>visible</string>
 						</dict>
 						<dict>
 							<key>identifier</key>
@@ -6094,7 +6094,12 @@
 				<key>onSceneKeyUpActions</key>
 				<array/>
 				<key>onSceneLoadActions</key>
-				<array/>
+				<array>
+					<dict>
+						<key>type</key>
+						<integer>0</integer>
+					</dict>
+				</array>
 				<key>onSceneTimelineCompleteActions</key>
 				<array/>
 				<key>onSceneUnloadActions</key>
@@ -6693,7 +6698,7 @@
 									<array>
 										<dict>
 											<key>javascriptOid</key>
-											<string>208</string>
+											<string>209</string>
 											<key>type</key>
 											<integer>4</integer>
 										</dict>
@@ -6751,22 +6756,18 @@
 					</dict>
 				</array>
 			</dict>
-			<key>currentGroupElement</key>
-			<string>155</string>
 			<key>name</key>
 			<string>lvl001</string>
 			<key>oid</key>
 			<string>122</string>
 			<key>scrollViewOffset</key>
-			<string>{0, 83}</string>
+			<string>{0, 41}</string>
 			<key>selectedObjects</key>
-			<array>
-				<string>204</string>
-			</array>
+			<array/>
 			<key>showTimelineActions</key>
 			<true/>
 			<key>splitHeight</key>
-			<real>489</real>
+			<real>662</real>
 		</dict>
 		<dict>
 			<key>animationController</key>
@@ -8242,15 +8243,13 @@
 			<key>oid</key>
 			<string>166</string>
 			<key>scrollViewOffset</key>
-			<string>{0, 1}</string>
+			<string>{1, 0}</string>
 			<key>selectedObjects</key>
-			<array/>
-			<key>showTimelineActions</key>
-			<false/>
+			<array>
+				<string>164</string>
+			</array>
 			<key>splitHeight</key>
 			<real>607</real>
-			<key>userGuides</key>
-			<array/>
 		</dict>
 	</array>
 	<key>scripts</key>
@@ -8281,12 +8280,12 @@ function showScene_instant(hypeDocument, element, event) {
 		</dict>
 		<dict>
 			<key>oid</key>
-			<string>208</string>
+			<string>209</string>
 			<key>source</key>
 			<string>// element - DOMHTMLElement that triggered this function being called
 // event - event that triggered this function being called
 function untitledFunction(hypeDocument, element, event) {
-	hypeDocument.goToTimeInTimelineNamed(13, 'Main Timeline');
+	hypeDocument.goToTimeInTimelineNamed(13, "Main Timeline");
 	
 }
 </string>

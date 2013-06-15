@@ -32,6 +32,7 @@
             g1.onTriggerEvent = function(e) {
                 g1.triggerEvent(e);
                 g2.triggerEvent(e);
+//                console.log("trigger event", e);
             };
             g2.onOtherMouseMove = function(event) {
                 var elem = g2.otherPlayers[event.playerId].cursorElem;

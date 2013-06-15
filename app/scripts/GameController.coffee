@@ -20,7 +20,8 @@
           eventName: methodName
           args: arguments
 
-    for m in ["startTimelineNamed", "pauseTimelineNamed", "continueTimelineNamed", "showSceneNamed"]
+    for m in ["startTimelineNamed", "pauseTimelineNamed", "continueTimelineNamed", "goToTimeInTimelineNamed",
+              "showSceneNamed"]
       patch(m)
 
   onTriggerEvent: (gameEvent) =>
