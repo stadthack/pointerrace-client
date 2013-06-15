@@ -46,10 +46,10 @@
         <!-- endbuild -->
 
         <script>
-          var g1 = new GameController(document.querySelector('.game-level'));
-          g1.onTriggerEvent = function () {
-            // CODE!
-          };
+          document.querySelector('.game-level').addEventListener('load', function () {
+            var g1 = new GameController(document.querySelector('.game-level'));
+            g1.onTriggerEvent = function () {};
+          });
         </script>
 </body>
 </html>
