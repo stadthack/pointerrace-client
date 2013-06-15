@@ -27,7 +27,7 @@ module.exports = function (grunt) {
                 nospawn: true
             },
             coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
+                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee', '<%= yeoman.app %>/hype/assets/*.coffee'],
                 tasks: ['coffee:dist']
             },
             coffeeTest: {
