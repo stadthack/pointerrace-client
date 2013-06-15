@@ -32,8 +32,9 @@
   };
 
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
-    var x = parseInt(state.x, 10);
-    var y = parseInt(state.y, 10);
+    var x = (parseFloat(state.x, 10) * document.width);
+    var y = (parseFloat(state.y, 10) * document.height);
+    console.log(x, y);
     return 'translate(' + x + 'px, ' + y + 'px)';
   };
 
@@ -64,8 +65,9 @@
         if (player === undefined) {
           console.log('Instantiating new Player.');
           player = players.others[id] = new Player();
-          player.update(playerData[id]);
         }
+
+        player.update(playerData[id]);
       }
     }
   };
@@ -86,12 +88,17 @@
     socket.on('serverstate', onServerstate);
   }
 
+  function onPlayerDisconnected(data) {
+    console.log('Player ', data, ' disconnected.');
+  }
+
   document.addEventListener('mousemove', function (event) {
-    var x = (event.pageX / document.width * 100).toFixed(2);
-    var y = (event.pageY / document.height * 100).toFixed(2);
+    var x = (event.pageX / document.width).toFixed(6);
+    var y = (event.pageY / document.height).toFixed(6);
 
     socket.emit('move', { x: x, y: y });
   });
 
   socket.on('connected', onConnected);
+  socket.on('player disconnected', onPlayerDisconnected);
 }());
