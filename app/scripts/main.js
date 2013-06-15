@@ -98,6 +98,10 @@
     gameInstance.addPlayerWithId(data.id);
   }
 
+  function onGameEvent(data) {
+    gameInstance.triggerEvent(data);
+  }
+
   playerBuffer.init();
   socket.on('connected', onConnected);
 
@@ -120,8 +124,8 @@
     gameInstance.onOtherPlayerAdd = function (player) {
       console.log('Added other player', player.playerId);
       var e = $(gameInstance.overlayElement);
-      player.cursorElem = $('<div class="cursor"></div>');
-      e.append(player.cursorElem);
+      player.pointer = $('<div class="pointer"></div>');
+      e.append(player.pointer);
     };
 
     gameInstance.onOtherPlayerRemove = function (player) {
@@ -133,6 +137,7 @@
     playerBuffer.apply();
     socket.on('player connected', onPlayerConnected);
     socket.on('player disconnected', onPlayerDisconnected);
+    socket.on('game event', onGameEvent);
   }
 
   document.querySelector('.game-level').addEventListener('load', function (e) {
