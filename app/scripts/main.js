@@ -99,6 +99,7 @@
   }
 
   function onGameEvent(data) {
+    console.log('Got event:', data.eventName);
     gameInstance.triggerEvent(data);
   }
 
@@ -118,20 +119,26 @@
 
     gameInstance.onOtherMouseMove = function (event) {
       var pointer = gameInstance.otherPlayers[event.playerId].pointer;
-      $(pointer).offset({ left: event.args[0], top: event.args[1] });
+      var transform = 'translate3d(' + event.args[0] + 'px, ' + event.args[1] + 'px, 0)';
+
+      pointer.style['-webkit-transform'] = transform;
+      pointer.style.transform = transform;
     };
 
     gameInstance.onOtherPlayerAdd = function (player) {
       console.log('Added other player', player.playerId);
-      var e = $(gameInstance.overlayElement);
-      player.pointer = $('<div class="pointer"></div>');
-      e.append(player.pointer);
+
+      var pointer = document.createElement('div');
+      pointer.className = 'pointer';
+      player.pointer = pointer;
+      gameInstance.overlayElement.appendChild(pointer);
     };
 
     gameInstance.onOtherPlayerRemove = function (player) {
       console.log('Removing player', player.playerId);
+
       var pointer = gameInstance.otherPlayers[player.playerId].pointer;
-      $(pointer).remove();
+      pointer.remove();
     };
 
     playerBuffer.apply();
