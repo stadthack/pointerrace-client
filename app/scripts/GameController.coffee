@@ -7,6 +7,11 @@
     @otherPlayers = {}
 
     $(@iFrameElement.contentWindow).mousemove (e) =>
+      @onOwnMouseMove
+        playerId: @playerId
+        eventName: "mouseMove"
+        args: [e.pageX, e.pageY]
+
       @onTriggerEvent
         playerId: @playerId
         eventName: "mouseMove"
@@ -35,9 +40,7 @@
 
   onMouseMove: (gameEvent) =>
     console.log('MouseMove:', gameEvent)
-    if gameEvent.playerId == @playerId
-      @onOwnMouseMove(gameEvent)
-    else
+    unless gameEvent.playerId == @playerId
       @onOtherMouseMove(gameEvent)
 
   onOwnMouseMove: (gameEvent) =>

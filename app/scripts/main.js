@@ -57,6 +57,21 @@
 
   var player = new Player();
 
+  function PlayerPointer(isSelf) {
+    this.isSelf = isSelf;
+
+    this.$el = document.createElement('div');
+    this.$el.className = isSelf ? 'pointer pointer-self' : 'pointer';
+
+    gameInstance.overlayElement.appendChild(this.$el);
+  }
+
+  PlayerPointer.prototype.move = function (x, y) {
+    var transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    this.$el.style['-webkit-transform'] = transform;
+    this.$el.style.transform = transform;
+  };
+
   var game = {
     $playerCount: document.querySelector('.player-counter .count'),
     loaded: false,
@@ -107,6 +122,7 @@
 
   function afterHypeLoaded () {
     gameInstance = new GameController(document.querySelector('.game-level'), player.id);
+    player.pointer = new PlayerPointer(true);
 
     // local loop-back
     gameInstance.onTriggerEvent = function (event) {
@@ -125,21 +141,21 @@
       socket.emit('game event', event);
     };
 
-    gameInstance.onOtherMouseMove = function (event) {
+    gameInstance.onOtherMouseMove = function onOtherMouseMove(event) {
       var pointer = gameInstance.otherPlayers[event.playerId].pointer;
-      var transform = 'translate3d(' + event.args[0] + 'px, ' + event.args[1] + 'px, 0)';
-
-      pointer.style['-webkit-transform'] = transform;
-      pointer.style.transform = transform;
+      pointer.move(event.args[0], event.args[1]);
     };
 
-    gameInstance.onOtherPlayerAdd = function (player) {
+    gameInstance.onOwnMouseMove = function onOwnMouseMove(event) {
+      console.log('own mouse move');
+
+      player.pointer.move(event.args[0], event.args[1]);
+    };
+
+    gameInstance.onOtherPlayerAdd = function onOtherPlayerAdd(player) {
       console.log('Added other player', player.playerId);
 
-      var pointer = document.createElement('div');
-      pointer.className = 'pointer';
-      player.pointer = pointer;
-      gameInstance.overlayElement.appendChild(pointer);
+      player.pointer = new PlayerPointer(false);
     };
 
     gameInstance.onOtherPlayerRemove = function (player) {
