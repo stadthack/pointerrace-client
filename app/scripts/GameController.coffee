@@ -59,4 +59,4 @@
     switch gameEvent.eventName
       when "mouseMove" then @onMouseMove(gameEvent)
       else
-        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
+        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, _.map(gameEvent.args, _.identity))

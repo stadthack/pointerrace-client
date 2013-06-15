@@ -80,7 +80,6 @@
     console.log('Player state:', player.state.current);
     console.log('We are player', data.id);
 
-    console.log(data);
     _.map(data.players, playerBuffer.onConnected, playerBuffer);
     // Don't work with server state before player initialization has happened.
     socket.on('serverstate', onServerstate);
@@ -112,6 +111,11 @@
     // local loop-back
     gameInstance.onTriggerEvent = function (event) {
       gameInstance.triggerEvent(event);
+
+      // TODO: Replace me
+      if (!gameInstance.playerId) {
+        gameInstance.playerId = player.id;
+      }
 
       console.log('Emitting', event.eventName);
       socket.emit('game event', event);
