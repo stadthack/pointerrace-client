@@ -2,8 +2,16 @@
 <head>
     <style>
         .level {
-            width: 600px;
-            height: 400px;
+            width: 720px;
+            height: 360px;
+        }
+
+        .level iframe {
+            left: 0;
+            width: 1280px;
+            height: 720px;
+            transform: scale(0.5,0.5);
+            -webkit-transform: scale(0.5, 0.5) translate(-640px,-360px);
         }
     </style>
     <script src="../../bower_components/jquery/jquery.js"></script>
@@ -21,15 +29,16 @@
                 };
             }
 
-            patch("startTimelineNamed");
-            patch("pauseTimelineNamed");
-
+            var methods = ["startTimelineNamed", "pauseTimelineNamed", "continueTimelineNamed", "showSceneNamed"];
+            for(var i=0;i<methods.length; i++) {
+                patch(methods[i]);
+            }
         }
     </script>
 </head>
     <body>
-    <iframe id="level1" class="level" src="TestLevel.html"></iframe>
-    <iframe id="level2" class="level" src="TestLevel.html"></iframe>
+    <div class="level"><iframe id="level1" src="TestLevel.html"></iframe></div>
+    <div class="level"><iframe id="level2" src="TestLevel.html"></iframe></div>
     </body>
 
     <script>
