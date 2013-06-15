@@ -7,6 +7,11 @@
     @otherPlayers = {}
 
     $(@iFrameElement.contentWindow).mousemove (e) =>
+      @onOwnMouseMove
+        playerId: @playerId
+        eventName: "mouseMove"
+        args: [e.pageX, e.pageY]
+
       @onTriggerEvent
         playerId: @playerId
         eventName: "mouseMove"
@@ -29,15 +34,13 @@
         playerId: @playerId
         eventName: "enterState"
         args: [name]
+      @originalHypeDocMethods["showSceneNamed"](name)
+
 
   onTriggerEvent: (gameEvent) =>
-    console.log "triggered", gameEvent
 
   onMouseMove: (gameEvent) =>
-    console.log('MouseMove:', gameEvent)
-    if gameEvent.playerId == @playerId
-      @onOwnMouseMove(gameEvent)
-    else
+    unless gameEvent.playerId == @playerId
       @onOtherMouseMove(gameEvent)
 
   onOwnMouseMove: (gameEvent) =>
@@ -46,7 +49,7 @@
 
   onOtherPlayerAdd: (player) =>
 
-  onOtherPlayerRemove:(player) =>
+  onOtherPlayerRemove: (player) =>
 
   removePlayerWithId: (playerId) =>
     p = @otherPlayers[playerId]
@@ -64,7 +67,8 @@
   triggerEvent: (gameEvent) =>
     switch gameEvent.eventName
       when "mouseMove" then @onMouseMove(gameEvent)
-      when "enterState" and gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
-        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
+      when "enterState"
+        if gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
+          @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, gameEvent.args)
       else
         @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, _.map(gameEvent.args, _.identity))
