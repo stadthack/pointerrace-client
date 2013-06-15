@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  var socket = io.connect('http://localhost:8080');
+  var socket = io.connect('http://192.168.2.237:8080');
   var PlayerState = function () {
     this.startup();
   };
