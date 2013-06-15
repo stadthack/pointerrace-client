@@ -25,13 +25,23 @@
     </body>
 
     <script>
-        // TODO: use robust way to understand when animations are loaded
+        // TODO: use robust way to understand when animations/levels are loaded
         setTimeout(function(){
             var g1 = new GameController(document.getElementById('level1'))
             var g2 = new GameController(document.getElementById('level2'))
             g1.onTriggerEvent = function(e) {
                 g1.triggerEvent(e);
                 g2.triggerEvent(e);
+            };
+            g2.onOtherMouseMove = function(event) {
+                var elem = g2.otherPlayers[event.playerId].cursorElem;
+                $(elem).offset({left:event.args[0].pageX, top:event.args[0].pageY});
+            };
+
+            g2.onOtherPlayerAdd = function(player) {
+                var e = $(g2.overlayElement);
+                player.cursorElem = $("<div class='cursor'></div>");
+                e.append(player.cursorElem);
             }
         }, 300);
 
