@@ -113,7 +113,9 @@
   }
 
   function onGameEvent(data) {
-    console.log('Got event:', data.eventName);
+    if (data.eventName !== 'mouseMove') {
+      console.log('Got event:', data);
+    }
     gameInstance.triggerEvent(data);
   }
 
@@ -137,7 +139,9 @@
         gameInstance.playerId = player.id;
       }
 
-      console.log('Emitting', event.eventName);
+      if (event.eventName !== 'mouseMove') {
+        console.log('Emitting', event.eventName);
+      }
       socket.emit('game event', event);
     };
 
@@ -147,8 +151,6 @@
     };
 
     gameInstance.onOwnMouseMove = function onOwnMouseMove(event) {
-      console.log('own mouse move');
-
       player.pointer.move(event.args[0], event.args[1]);
     };
 
