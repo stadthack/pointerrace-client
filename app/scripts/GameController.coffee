@@ -24,6 +24,12 @@
               "showSceneNamed"]
       patch(m)
 
+    @hypeDoc["showSceneNamed"] = (name) =>
+      @onTriggerEvent
+        playerId: @playerId
+        eventName: "enterState"
+        args: [name]
+
   onTriggerEvent: (gameEvent) =>
     console.log "triggered", gameEvent
 
@@ -58,5 +64,7 @@
   triggerEvent: (gameEvent) =>
     switch gameEvent.eventName
       when "mouseMove" then @onMouseMove(gameEvent)
+      when "enterState" and gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
+        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
       else
         @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, _.map(gameEvent.args, _.identity))
