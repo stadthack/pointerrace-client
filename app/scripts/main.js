@@ -158,11 +158,15 @@
       player.pointer = new PlayerPointer(false);
     };
 
-    gameInstance.onOtherPlayerRemove = function (player) {
-      console.log('Removing player', player.playerId);
+    gameInstance.onOtherPlayerRemove = function (data) {
+      console.log('Removing player', data.playerId);
 
-      var pointer = gameInstance.otherPlayers[player.playerId].pointer;
-      pointer.remove();
+      var player = gameInstance.otherPlayers[data.playerId];
+
+      if (player) {
+        player.pointer.remove();
+        delete gameInstance.otherPlayers[data.playerId];
+      }
     };
 
     playerBuffer.apply();
