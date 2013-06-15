@@ -44,7 +44,7 @@
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
     var x = state.x * document.body.clientWidth;
     var y = state.y * document.body.clientHeight;
-    return 'translate(' + x + 'px, ' + y + 'px)';
+    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
   };
 
   Player.prototype._initPointer = function _initCursor(isUs) {
