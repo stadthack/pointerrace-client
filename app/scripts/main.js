@@ -16,7 +16,7 @@
   });
 
   function Player() {
-    this.uuid = null;
+    this.id = null;
     this.pointer = null;
     this.state = new PlayerState();
   }
@@ -33,10 +33,17 @@
     this.pointer.style.transform = transform;
   };
 
+  Player.prototype.destroy = function destroy() {
+    console.log('Destroying ', this.id);
+    if (this.pointer) {
+      console.log('Removing ', this.pointer);
+      this.pointer.parentElement.removeChild(this.pointer);
+    }
+  };
+
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
     var x = state.x * document.body.clientWidth;
     var y = state.y * document.body.clientHeight;
-    console.log(x, y);
     return 'translate(' + x + 'px, ' + y + 'px)';
   };
 
@@ -49,7 +56,7 @@
 
   var players = {
     self: new Player(),
-    others: []
+    others: {}
   };
 
   var game = {
@@ -57,20 +64,20 @@
     $pointersUs: document.querySelector('.pointers-layer .pointers-us'),
     // TODO: Handle players disconnects. Idea: Make this through an event.
     updatePlayers: function updatePlayers(playerData) {
-      var player;
-      for (var id in playerData) {
-        if (id === players.self.id) {
-          continue;
+      playerData.forEach(function (data) {
+        var player;
+        if (data.id === players.self.id) {
+          return;  // continue
         }
 
-        player = players.others[id];
+        player = players.others[data.id];
         if (player === undefined) {
-          console.log('Instantiating new Player.');
-          player = players.others[id] = new Player();
+          console.log('Instantiating new Player ', data.id);
+          player = players.others[data.id] = new Player();
         }
 
-        player.update(playerData[id]);
-      }
+        player.update(data);
+      });
     }
   };
 
@@ -92,6 +99,17 @@
 
   function onPlayerDisconnected(data) {
     console.log('Player ', data, ' disconnected.');
+
+    var player = players.others[data.player.id];
+
+    if (player) {
+      player.destroy();
+      delete players.others[data.player.id];
+    } else {
+      console.log('Did not know of a player ', data.player.id,
+          '. Skipping destruction. Lucky bastard.');
+      console.log(players);
+    }
   }
 
   document.addEventListener('mousemove', function (event) {
