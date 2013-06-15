@@ -17,21 +17,67 @@
 
   function Player() {
     this.uuid = null;
+    this.pointer = null;
     this.state = new PlayerState();
   }
 
+  Player.prototype.update = function update(state) {
+    if (!state) {
+      console.error('Invalid player state: ', state);
+    }
+    if (this.pointer === null) {
+      this._initPointer();
+    }
+    this.pointer.style['-webkit-transform'] = this._getPointerTransform(state);
+  };
+
+  Player.prototype._getPointerTransform = function _getPointerTransform(state) {
+    var x = parseInt(state.x, 10);
+    var y = parseInt(state.y, 10);
+    return 'translate(' + x + 'px, ' + y + 'px)';
+  };
+
+  Player.prototype._initPointer = function _initCursor() {
+    console.log('Initializing new Pointer.');
+    this.pointer = document.createElement('div');
+    this.pointer.className = 'pointer';
+    game.$pointersThem.appendChild(this.pointer);
+  };
+
   var players = {
-    self: new Player()
+    self: new Player(),
+    others: []
+  };
+
+  var game = {
+    $pointersThem: document.querySelector('.pointers-layer .pointers-them'),
+    $pointersUs: document.querySelector('.pointers-layer .pointers-us'),
+    // TODO: Handle players disconnects. Idea: Make this through an event.
+    updatePlayers: function updatePlayers(playerData) {
+      var player;
+      for (var id in playerData) {
+        if (id === players.self.id) {
+          continue;
+        }
+
+        player = players.others[id];
+        if (player === undefined) {
+          console.log('Instantiating new Player.');
+          player = players.others[id] = new Player();
+          player.update(playerData[id]);
+        }
+      }
+    }
   };
 
   function onServerstate(data) {
-    console.log('server state: ', data);
+    game.updatePlayers(data.players);
   }
 
   function onConnected(data) {
     var self = players.self;
 
-    self.uuid = data.uuid;
+    self.id = data.id;
     self.state.connect();
 
     console.log('Player state: ', self.state.current);
