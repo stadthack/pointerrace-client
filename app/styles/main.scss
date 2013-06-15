@@ -52,3 +52,7 @@ body {
     // transition: transform 0.02s linear;
   }
 }
+
+.pointers.pointers-them .pointer {
+  background-image: image_url("pointer_them.svg");
+}
