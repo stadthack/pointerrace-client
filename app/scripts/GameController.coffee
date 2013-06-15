@@ -40,6 +40,17 @@
   onOtherPlayerAdd: (player) =>
     console.log "other player add", gameEvent
 
+  onOtherPlayerRemove:(player) =>
+    console.log "other player remove", gameEvent
+
+  removePlayerWithId: (playerId) =>
+    p = @otherPlayers[playerId]
+    if p?
+      @onOtherPlayerRemove(p)
+      delete @otherPlayers[playerId]
+    else
+      throw "no player with id '#{playerId}' to delete"
+
   addOtherPlayerIfNeeded: (playerId) =>
     if playerId != @playerId and not @otherPlayers[playerId]
       otherPlayer = {playerId: playerId}

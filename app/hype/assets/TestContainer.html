@@ -42,7 +42,16 @@
                 var e = $(g2.overlayElement);
                 player.cursorElem = $("<div class='cursor'></div>");
                 e.append(player.cursorElem);
-            }
+            };
+            g2.onOtherPlayerRemove = function(player) {
+                var elem = player.cursorElem;
+                elem.remove();
+                delete player.cursorElem;
+            };
+
+            // debugging
+            window.g1 = g1;
+            window.g2 = g2;
         }, 300);
 
     </script>
