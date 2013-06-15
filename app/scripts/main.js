@@ -66,10 +66,14 @@
     gameInstance.overlayElement.appendChild(this.$el);
   }
 
-  PlayerPointer.prototype.move = function (x, y) {
+  PlayerPointer.prototype.move = function move(x, y) {
     var transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
     this.$el.style['-webkit-transform'] = transform;
     this.$el.style.transform = transform;
+  };
+
+  PlayerPointer.prototype.remove = function remove() {
+    this.$el.parentElement.removeChild(this.$el);
   };
 
   var game = {
