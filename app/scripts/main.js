@@ -1,10 +1,45 @@
-/*global io, StateMachine */
+/*global _, io, StateMachine, GameController */
 (function () {
   'use strict';
 
-  var socket = io.connect('http://192.168.2.237:8080');
+  var socket = io.connect('http://localhost:8080');
   var PlayerState = function () {
     this.startup();
+  };
+  var gameInstance = null;
+  var playerBuffer = {
+    _players: [],
+    _onConnected: null,
+    _onDisconnected: null,
+    _applied: false,
+    init: function init() {
+      this._onConnected = this.onConnected.bind(this);
+      this._onDisconnected = this.onDisconnected.bind(this);
+
+      socket.on('player connected', this._onConnected);
+      socket.on('player disconnected', this._onDisconnected);
+    },
+    onConnected: function onConnect(data) {
+      this._players.push(data.id);
+      if (this._applied) {
+        this.apply();
+      }
+    },
+    onDisconnected: function onDisconnect(data) {
+      this._players.splice(this._player.indexOf(data.id), 1);
+    },
+    apply: function apply() {
+      _.map(this._players, gameInstance.addPlayerWithId, gameInstance);
+      this._players = [];
+      if (!this._applied) {
+        this._removeListener();
+        this._applied = true;
+      }
+    },
+    _removeListener: function _removeListener() {
+      socket.removeListener('player connected', this._onConnected);
+      socket.removeListener('player disconnected', this._onDisconnected);
+    }
   };
 
   StateMachine.create({
@@ -17,122 +52,91 @@
 
   function Player() {
     this.id = null;
-    this.pointer = null;
     this.state = new PlayerState();
   }
 
-  Player.prototype.update = function update(state, isUs) {
-    if (!state) {
-      console.error('Invalid player state: ', state);
-    }
-    if (this.pointer === null) {
-      this._initPointer(isUs);
-    }
-    var transform = this._getPointerTransform(state);
-    this.pointer.style['-webkit-transform'] = transform;
-    this.pointer.style.transform = transform;
-  };
-
-  Player.prototype.destroy = function destroy() {
-    console.log('Destroying ', this.id);
-    if (this.pointer) {
-      console.log('Removing ', this.pointer);
-      this.pointer.parentElement.removeChild(this.pointer);
-    }
-  };
-
-  Player.prototype._getPointerTransform = function _getPointerTransform(state) {
-    var x = state.x * document.body.clientWidth;
-    var y = state.y * document.body.clientHeight;
-    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-  };
-
-  Player.prototype._initPointer = function _initCursor(isUs) {
-    console.log('Initializing new Pointer.');
-    this.pointer = document.createElement('div');
-    this.pointer.className = 'pointer';
-    if (isUs) {
-      game.$pointersUs.appendChild(this.pointer);
-    } else {
-      game.$pointersThem.appendChild(this.pointer);
-    }
-  };
-
-  var players = {
-    self: new Player(),
-    others: {}
-  };
+  var player = new Player();
 
   var game = {
-    $pointersThem: document.querySelector('.pointers-layer .pointers-them'),
-    $pointersUs: document.querySelector('.pointers-layer .pointers-us'),
     $playerCount: document.querySelector('.player-counter .count'),
+    loaded: false,
     _playerCount: 0,
     setPlayerCount: function setPlayerCount(gameData) {
       if (this._playerCount !== gameData.playerCount) {
         this.$playerCount.textContent = gameData.playerCount;
         this._playerCount = gameData.playerCount;
       }
-    },
-    // TODO: Handle players disconnects. Idea: Make this through an event.
-    updatePlayers: function updatePlayers(playerData) {
-      playerData.forEach(function (data) {
-        var player;
-        if (data.id === players.self.id) {
-          return;  // continue
-        }
-
-        player = players.others[data.id];
-        if (player === undefined) {
-          console.log('Instantiating new Player ', data.id);
-          player = players.others[data.id] = new Player();
-        }
-
-        player.update(data);
-      });
     }
   };
 
   function onServerstate(data) {
     game.setPlayerCount(data.game);
-    game.updatePlayers(data.players);
   }
 
   function onConnected(data) {
-    var self = players.self;
+    player.id = data.id;
+    player.state.connect();
 
-    self.id = data.id;
-    self.state.connect();
+    console.log('Player state:', player.state.current);
+    console.log('We are player', data.id);
 
-    console.log('Player state: ', self.state.current);
-
+    console.log(data);
+    _.map(data.players, playerBuffer.onConnected, playerBuffer);
     // Don't work with server state before player initialization has happened.
     socket.on('serverstate', onServerstate);
   }
 
   function onPlayerDisconnected(data) {
-    console.log('Player ', data, ' disconnected.');
+    console.log('Player', data.id, 'disconnected.');
 
-    var player = players.others[data.player.id];
-
-    if (player) {
-      player.destroy();
-      delete players.others[data.player.id];
-    } else {
-      console.log('Did not know of a player ', data.player.id,
-          '. Skipping destruction. Lucky bastard.');
-      console.log(players);
-    }
+    gameInstance.removePlayerWithId(data.id);
   }
 
-  document.addEventListener('mousemove', function (event) {
-    var x = (event.pageX / document.body.clientWidth);
-    var y = (event.pageY / document.body.clientHeight);
+  function onPlayerConnected(data) {
+    console.log('Player', data.id, 'connected.');
 
-    players.self.update({ x: x, y: y }, true);
-    socket.emit('move', { x: x, y: y });
-  });
+    gameInstance.addPlayerWithId(data.id);
+  }
 
+  playerBuffer.init();
   socket.on('connected', onConnected);
-  socket.on('player disconnected', onPlayerDisconnected);
+
+  function afterHypeLoaded () {
+    gameInstance = new GameController(document.querySelector('.game-level'), player.id);
+
+    // local loop-back
+    gameInstance.onTriggerEvent = function (event) {
+      gameInstance.triggerEvent(event);
+
+      console.log('Emitting', event.eventName);
+      socket.emit('game event', event);
+    };
+
+    gameInstance.onOtherMouseMove = function (event) {
+      var pointer = gameInstance.otherPlayers[event.playerId].pointer;
+      $(pointer).offset({ left: event.args[0], top: event.args[1] });
+    };
+
+    gameInstance.onOtherPlayerAdd = function (player) {
+      console.log('Added other player', player.playerId);
+      var e = $(gameInstance.overlayElement);
+      player.cursorElem = $('<div class="cursor"></div>');
+      e.append(player.cursorElem);
+    };
+
+    gameInstance.onOtherPlayerRemove = function (player) {
+      console.log('Removing player', player.playerId);
+      var pointer = gameInstance.otherPlayers[player.playerId].pointer;
+      $(pointer).remove();
+    };
+
+    playerBuffer.apply();
+    socket.on('player connected', onPlayerConnected);
+    socket.on('player disconnected', onPlayerDisconnected);
+  }
+
+  document.querySelector('.game-level').addEventListener('load', function (e) {
+    // iframe was loaded, now wait for hype
+    e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
+  });
 }());

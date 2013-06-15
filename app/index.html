@@ -16,10 +16,6 @@
         <!-- endbuild -->
     </head>
     <body>
-        <div class="pointers-layer">
-            <div class="pointers pointers-them"></div>
-            <div class="pointers pointers-us"></div>
-        </div>
         <div class="player-counter">Connected Players:
           <span class="count">0</span>
         </div>
@@ -41,21 +37,9 @@
         <script src="bower_components/jquery/jquery.js"></script>
         <script src="bower_components/socket.io-client/dist/socket.io.js"></script>
         <script src="bower_components/javascript-state-machine/state-machine.js"></script>
+        <script src="bower_components/underscore/underscore.js"></script>
         <script src="scripts/main.js"></script>
         <script src="scripts/GameController.js"></script>
         <!-- endbuild -->
-
-        <script>
-            document.querySelector('.game-level').addEventListener('load', function (e) {
-                // iframe was loaded, now wait for hype
-                e.srcElement.contentWindow.afterHypeLoaded(function () {
-                    var g1 = new GameController(document.querySelector('.game-level'));
-                    // local loop-back
-                    g1.onTriggerEvent = function (e) {
-                        g1.triggerEvent(e);
-                    };
-                });
-            });
-        </script>
 </body>
 </html>

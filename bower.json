@@ -5,7 +5,8 @@
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
     "socket.io-client": "~0.9.16",
-    "javascript-state-machine": "~2.2.0"
+    "javascript-state-machine": "~2.2.0",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {}
 }

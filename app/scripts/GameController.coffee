@@ -1,16 +1,16 @@
 @GameController = class
-  constructor: (@iFrameElement) ->
+  constructor: (@iFrameElement, @playerId) ->
     @hypeDoc = @iFrameElement.contentWindow.hypeDocument()
     @overlayElement = @iFrameElement.contentDocument.body
     @originalHypeDocMethods = {}
-    @playerId = "unknown player " + Math.round(Math.random() * 10000)
+    @playerId = @playerId
     @otherPlayers = {}
 
     $(@iFrameElement.contentWindow).mousemove (e) =>
       @onTriggerEvent
         playerId: @playerId
         eventName: "mouseMove"
-        args: arguments
+        args: [e.pageX, e.pageY]
 
     patch = (methodName) =>
       @originalHypeDocMethods[methodName] = @hypeDoc[methodName]
@@ -25,9 +25,10 @@
       patch(m)
 
   onTriggerEvent: (gameEvent) =>
-#    console.log "triggered", gameEvent
+    console.log "triggered", gameEvent
 
   onMouseMove: (gameEvent) =>
+    console.log('MouseMove:', gameEvent)
     if gameEvent.playerId == @playerId
       @onOwnMouseMove(gameEvent)
     else
@@ -36,13 +37,10 @@
   onOwnMouseMove: (gameEvent) =>
 
   onOtherMouseMove: (gameEvent) =>
-#    console.log "other played move", gameEvent
 
   onOtherPlayerAdd: (player) =>
-    console.log "other player add", gameEvent
 
   onOtherPlayerRemove:(player) =>
-    console.log "other player remove", gameEvent
 
   removePlayerWithId: (playerId) =>
     p = @otherPlayers[playerId]
@@ -52,14 +50,12 @@
     else
       throw "no player with id '#{playerId}' to delete"
 
-  addOtherPlayerIfNeeded: (playerId) =>
-    if playerId != @playerId and not @otherPlayers[playerId]
-      otherPlayer = {playerId: playerId}
-      @otherPlayers[playerId] = otherPlayer
-      @onOtherPlayerAdd otherPlayer
+  addPlayerWithId: (playerId) =>
+    otherPlayer = {playerId: playerId}
+    @otherPlayers[playerId] = otherPlayer
+    @onOtherPlayerAdd otherPlayer
 
   triggerEvent: (gameEvent) =>
-    @addOtherPlayerIfNeeded(gameEvent.playerId)
     switch gameEvent.eventName
       when "mouseMove" then @onMouseMove(gameEvent)
       else
