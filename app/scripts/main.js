@@ -67,6 +67,13 @@
     $pointersThem: document.querySelector('.pointers-layer .pointers-them'),
     $pointersUs: document.querySelector('.pointers-layer .pointers-us'),
     $playerCount: document.querySelector('.player-counter .count'),
+    _playerCount: 0,
+    setPlayerCount: function setPlayerCount(gameData) {
+      if (this._playerCount !== gameData.playerCount) {
+        this.$playerCount.textContent = gameData.playerCount;
+        this._playerCount = gameData.playerCount;
+      }
+    },
     // TODO: Handle players disconnects. Idea: Make this through an event.
     updatePlayers: function updatePlayers(playerData) {
       playerData.forEach(function (data) {
@@ -87,7 +94,7 @@
   };
 
   function onServerstate(data) {
-    game.$playerCount.textContent = data.game.playerCount;
+    game.setPlayerCount(data.game);
     game.updatePlayers(data.players);
   }
 
