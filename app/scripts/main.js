@@ -28,7 +28,9 @@
     if (this.pointer === null) {
       this._initPointer();
     }
-    this.pointer.style['-webkit-transform'] = this._getPointerTransform(state);
+    var transform = this._getPointerTransform(state);
+    this.pointer.style['-webkit-transform'] = transform;
+    this.pointer.style['-moz-transform'] = transform;
   };
 
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
@@ -93,8 +95,8 @@
   }
 
   document.addEventListener('mousemove', function (event) {
-    var x = (event.pageX / document.width).toFixed(6);
-    var y = (event.pageY / document.height).toFixed(6);
+    var x = (event.pageX / document.width);
+    var y = (event.pageY / document.height);
 
     socket.emit('move', { x: x, y: y });
   });
