@@ -56,3 +56,10 @@ body {
 .pointers.pointers-them .pointer {
   background-image: image_url("pointer_them.svg");
 }
+
+.player-counter {
+  font-size: 150%;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
