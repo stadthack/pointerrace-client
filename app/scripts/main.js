@@ -16,61 +16,85 @@
   });
 
   function Player() {
-    this.uuid = null;
+    this.id = null;
     this.pointer = null;
     this.state = new PlayerState();
   }
 
-  Player.prototype.update = function update(state) {
+  Player.prototype.update = function update(state, isUs) {
     if (!state) {
       console.error('Invalid player state: ', state);
     }
     if (this.pointer === null) {
-      this._initPointer();
+      this._initPointer(isUs);
     }
-    this.pointer.style['-webkit-transform'] = this._getPointerTransform(state);
+    var transform = this._getPointerTransform(state);
+    this.pointer.style['-webkit-transform'] = transform;
+    this.pointer.style.transform = transform;
+  };
+
+  Player.prototype.destroy = function destroy() {
+    console.log('Destroying ', this.id);
+    if (this.pointer) {
+      console.log('Removing ', this.pointer);
+      this.pointer.parentElement.removeChild(this.pointer);
+    }
   };
 
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
-    var x = parseInt(state.x, 10);
-    var y = parseInt(state.y, 10);
+    var x = state.x * document.body.clientWidth;
+    var y = state.y * document.body.clientHeight;
     return 'translate(' + x + 'px, ' + y + 'px)';
   };
 
-  Player.prototype._initPointer = function _initCursor() {
+  Player.prototype._initPointer = function _initCursor(isUs) {
     console.log('Initializing new Pointer.');
     this.pointer = document.createElement('div');
     this.pointer.className = 'pointer';
-    game.$pointersThem.appendChild(this.pointer);
+    if (isUs) {
+      game.$pointersUs.appendChild(this.pointer);
+    } else {
+      game.$pointersThem.appendChild(this.pointer);
+    }
   };
 
   var players = {
     self: new Player(),
-    others: []
+    others: {}
   };
 
   var game = {
     $pointersThem: document.querySelector('.pointers-layer .pointers-them'),
     $pointersUs: document.querySelector('.pointers-layer .pointers-us'),
+    $playerCount: document.querySelector('.player-counter .count'),
+    _playerCount: 0,
+    setPlayerCount: function setPlayerCount(gameData) {
+      if (this._playerCount !== gameData.playerCount) {
+        this.$playerCount.textContent = gameData.playerCount;
+        this._playerCount = gameData.playerCount;
+      }
+    },
     // TODO: Handle players disconnects. Idea: Make this through an event.
     updatePlayers: function updatePlayers(playerData) {
-      var player;
-      for (var id in playerData) {
-        if (id === players.self.id) {
-          continue;
+      playerData.forEach(function (data) {
+        var player;
+        if (data.id === players.self.id) {
+          return;  // continue
         }
 
-        player = players.others[id];
+        player = players.others[data.id];
         if (player === undefined) {
-          console.log('Instantiating new Player.');
-          player = players.others[id] = new Player();
-          player.update(playerData[id]);
+          console.log('Instantiating new Player ', data.id);
+          player = players.others[data.id] = new Player();
         }
-      }
+
+        player.update(data);
+      });
     }
   };
 
   function onServerstate(data) {
+    game.setPlayerCount(data.game);
     game.updatePlayers(data.players);
   }
 
@@ -86,12 +110,29 @@
     socket.on('serverstate', onServerstate);
   }
 
-  document.addEventListener('mousemove', function (event) {
-    var x = (event.pageX / document.width * 100).toFixed(2);
-    var y = (event.pageY / document.height * 100).toFixed(2);
+  function onPlayerDisconnected(data) {
+    console.log('Player ', data, ' disconnected.');
 
+    var player = players.others[data.player.id];
+
+    if (player) {
+      player.destroy();
+      delete players.others[data.player.id];
+    } else {
+      console.log('Did not know of a player ', data.player.id,
+          '. Skipping destruction. Lucky bastard.');
+      console.log(players);
+    }
+  }
+
+  document.addEventListener('mousemove', function (event) {
+    var x = (event.pageX / document.body.clientWidth);
+    var y = (event.pageY / document.body.clientHeight);
+
+    players.self.update({ x: x, y: y }, true);
     socket.emit('move', { x: x, y: y });
   });
 
   socket.on('connected', onConnected);
+  socket.on('player disconnected', onPlayerDisconnected);
 }());
