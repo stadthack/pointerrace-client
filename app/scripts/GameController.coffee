@@ -36,6 +36,15 @@
         args: [name]
       @originalHypeDocMethods["showSceneNamed"](name)
 
+    adjustSizeOfIFrame = () =>
+      f = Math.min($(window).width() / 1280, $(window).height() / 720)
+
+      transform = "scale(#{f}, #{f}) translate(#{0}px,-#{0}px)"
+      @iFrameElement.style["-webkit-transform"] = transform
+      @iFrameElement.style["transform"] = transform
+
+    $(window).resize adjustSizeOfIFrame
+    adjustSizeOfIFrame()
 
   onTriggerEvent: (gameEvent) =>
 
