@@ -6,6 +6,10 @@
   var PlayerState = function () {
     this.startup();
   };
+  var levels = [
+    '/hype/GreenLevel.html',
+    '/hype/TestLevel.html'
+  ]
   var gameInstance = null;
   var playerBuffer = {
     _players: [],
@@ -98,6 +102,14 @@
 
     console.log('Player state:', player.state.current);
     console.log('We are player', data.id);
+    console.log('Let\'s play level', data.numLevel);
+
+    var $iframe = document.querySelector('.game-level');
+    $iframe.addEventListener('load', function (e) {
+      // iframe was loaded, now wait for hype
+      e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
+    });
+    $iframe.src = levels[data.numLevel % levels.length];
 
     _.map(data.players, playerBuffer.onConnected, playerBuffer);
     // Don't work with server state before player initialization has happened.
@@ -132,7 +144,6 @@
 
     // local loop-back
     gameInstance.onTriggerEvent = function (event) {
-
       // TODO: Replace me
       // This is inefficient and should probably be replaced with either a count
       // down latch-ish synchronization primitive or two promises, so we can
@@ -179,9 +190,4 @@
     socket.on('player disconnected', onPlayerDisconnected);
     socket.on('game event', onGameEvent);
   }
-
-  document.querySelector('.game-level').addEventListener('load', function (e) {
-    // iframe was loaded, now wait for hype
-    e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
-  });
 }());
