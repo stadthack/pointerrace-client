@@ -34,8 +34,15 @@
             return HYPE.documents.TestLevel;
         }
 
-        function startTimelineNamed(timelineName) {
-            hypeDocument().startTimelineNamed(timelineName);
+        function afterHypeLoaded(callback) {
+            if(hypeDocument()) {
+                callback();
+            } else {
+                if("HYPE_eventListeners" in window === false) {
+                    window.HYPE_eventListeners = Array();
+                }
+                window.HYPE_eventListeners.push({"type":"HypeDocumentLoad", "callback":callback});
+            }
         }
 
     </script>

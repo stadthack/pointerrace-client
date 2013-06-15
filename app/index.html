@@ -46,10 +46,16 @@
         <!-- endbuild -->
 
         <script>
-          document.querySelector('.game-level').addEventListener('load', function () {
-            var g1 = new GameController(document.querySelector('.game-level'));
-            g1.onTriggerEvent = function () {};
-          });
+            document.querySelector('.game-level').addEventListener('load', function (e) {
+                // iframe was loaded, now wait for hype
+                e.srcElement.contentWindow.afterHypeLoaded(function () {
+                    var g1 = new GameController(document.querySelector('.game-level'));
+                    // local loop-back
+                    g1.onTriggerEvent = function (e) {
+                        g1.triggerEvent(e);
+                    };
+                });
+            });
         </script>
 </body>
 </html>
