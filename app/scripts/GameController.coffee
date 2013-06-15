@@ -34,7 +34,8 @@
         playerId: @playerId
         eventName: "enterState"
         args: [name]
-      @originalHypeDocMethods["showSceneNamed"](name)
+
+      @originalHypeDocMethods["showSceneNamed"](name) unless name == "level"
 
     adjustSizeOfIFrame = () =>
       f = Math.min($(window).width() / 1280, $(window).height() / 720)
