@@ -113,6 +113,10 @@
       gameInstance.triggerEvent(event);
 
       // TODO: Replace me
+      // This is inefficient and should probably be replaced with either a count
+      // down latch-ish synchronization primitive or two promises, so we can
+      // depend on the playerId to be set. Since this is triggered on every
+      // event, optimizing here is probably a good idea.
       if (!gameInstance.playerId) {
         gameInstance.playerId = player.id;
       }
