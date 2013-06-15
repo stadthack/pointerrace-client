@@ -128,7 +128,6 @@
 
     // local loop-back
     gameInstance.onTriggerEvent = function (event) {
-      gameInstance.triggerEvent(event);
 
       // TODO: Replace me
       // This is inefficient and should probably be replaced with either a count
