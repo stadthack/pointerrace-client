@@ -30,12 +30,12 @@
     }
     var transform = this._getPointerTransform(state);
     this.pointer.style['-webkit-transform'] = transform;
-    this.pointer.style['-moz-transform'] = transform;
+    this.pointer.style.transform = transform;
   };
 
   Player.prototype._getPointerTransform = function _getPointerTransform(state) {
-    var x = (parseFloat(state.x, 10) * document.width);
-    var y = (parseFloat(state.y, 10) * document.height);
+    var x = state.x * document.body.clientWidth;
+    var y = state.y * document.body.clientHeight;
     console.log(x, y);
     return 'translate(' + x + 'px, ' + y + 'px)';
   };
@@ -95,8 +95,8 @@
   }
 
   document.addEventListener('mousemove', function (event) {
-    var x = (event.pageX / document.width);
-    var y = (event.pageY / document.height);
+    var x = (event.pageX / document.body.clientWidth);
+    var y = (event.pageY / document.body.clientHeight);
 
     socket.emit('move', { x: x, y: y });
   });
