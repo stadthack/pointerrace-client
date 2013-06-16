@@ -82,6 +82,14 @@
     this.$el.parentElement.removeChild(this.$el);
   };
 
+  PlayerPointer.prototype.setFlashing = function (value) {
+    if (value) {
+      this.$el.classList.add('flashing');
+    } else {
+      this.$el.classList.remove('flashing');
+    }
+  };
+
   var game = {
     $playerCount: document.querySelector('.player-counter .count'),
     loaded: false,
