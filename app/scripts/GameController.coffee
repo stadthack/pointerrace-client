@@ -65,6 +65,11 @@
     $(window).resize adjustSizeOfIFrame
     adjustSizeOfIFrame()
 
+    preventUnfocus = () =>
+      @hypeDoc.showSceneNamed "retry"
+
+    window.addEventListener 'blur', preventUnfocus
+
   onTriggerEvent: (gameEvent) =>
 
   onMouseMove: (gameEvent) =>
