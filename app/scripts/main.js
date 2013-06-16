@@ -130,6 +130,7 @@
   }
 
   function onGameEvent(data) {
+    data.args = _.map(data.args, _.identity);
     if (data.eventName !== 'mouseMove') {
       console.log('Got event:', data);
     }
