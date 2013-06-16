@@ -105,5 +105,8 @@
         # only playing game (screne=="level") requires syncing
         if @hypeDoc.currentSceneName() == "level"
           @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
+          # ensure animation actually runs
+          if gameEvent.eventName == "goToTimeInTimelineNamed"
+            @originalHypeDocMethods["continueTimelineNamed"].apply(@hypeDoc, [gameEvent.args[1]])
       else
         @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
