@@ -39,7 +39,8 @@ body {
   &:not(.pointer-self) {
     transition: transform 0.02s linear;
     width: 32px;
-    width: 32px;
+    height: 32px;
+    background-position: -6px 0;
   }
 
   &.pointer-self {
