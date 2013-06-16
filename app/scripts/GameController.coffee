@@ -98,5 +98,9 @@
         console.log("Loading next level", gameEvent.args['numLevel'])
         callback = -> window.location.reload()
         setTimeout callback, 2500
+      when "goToTimeInTimelineNamed", "startTimelineNamed"
+        # only playing game (screne=="level") requires syncing
+        if @hypeDoc.currentSceneName() == "level"
+          @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
       else
-        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, _.map(gameEvent.args, _.identity))
+        @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, gameEvent.args)
