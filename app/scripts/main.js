@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  var socketHost = typeof(window) === "undefined" ? "localhost" : window.location.host;
+  var socketHost = typeof(window) === "undefined" ? "localhost" : window.location.host.split(":")[0];
   var socket = io.connect('http://' + socketHost + ':8080');
   var PlayerState = function () {
     this.startup();
