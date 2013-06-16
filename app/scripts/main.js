@@ -8,9 +8,9 @@
     this.startup();
   };
   var levels = [
-    '/hype/GreenLevel.html',
-    '/hype/TestLevel.html'
-  ]
+    'hype/GreenLevel.html',
+    'hype/TestLevel.html'
+  ];
   var gameInstance = null;
   var playerBuffer = {
     _players: [],
