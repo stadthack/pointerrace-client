@@ -103,11 +103,21 @@
         this.$playerCount.textContent = gameData.playerCount;
         this._playerCount = gameData.playerCount;
       }
+    },
+    updatePlayerMovements: function (players) {
+      _.each(players, function (player) {
+        onGameEvent({
+          eventName: 'mouseMove',
+          playerId: player.id,
+          args: [player.x, player.y]
+        });
+      });
     }
   };
 
   function onServerstate(data) {
     game.setPlayerCount(data.game);
+    game.updatePlayerMovements(data.players);
   }
 
   function onConnected(data) {
@@ -147,7 +157,9 @@
     if (data.eventName !== 'mouseMove') {
       console.log('Got event:', data);
     }
-    gameInstance.triggerEvent(data);
+    if (gameInstance) {
+      gameInstance.triggerEvent(data);
+    }
   }
 
   playerBuffer.init();
