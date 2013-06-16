@@ -2,10 +2,15 @@
 (function () {
   'use strict';
 
-  var socket = io.connect('http://localhost:8080');
+  var socketHost = typeof(window) === "undefined" ? "localhost" : window.location.host;
+  var socket = io.connect('http://' + socketHost + ':8080');
   var PlayerState = function () {
     this.startup();
   };
+  var levels = [
+    'hype/GreenLevel.html',
+    'hype/TestLevel.html'
+  ];
   var gameInstance = null;
   var playerBuffer = {
     _players: [],
@@ -66,10 +71,14 @@
     gameInstance.overlayElement.appendChild(this.$el);
   }
 
-  PlayerPointer.prototype.move = function (x, y) {
+  PlayerPointer.prototype.move = function move(x, y) {
     var transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
     this.$el.style['-webkit-transform'] = transform;
     this.$el.style.transform = transform;
+  };
+
+  PlayerPointer.prototype.remove = function remove() {
+    this.$el.parentElement.removeChild(this.$el);
   };
 
   var game = {
@@ -94,6 +103,14 @@
 
     console.log('Player state:', player.state.current);
     console.log('We are player', data.id);
+    console.log('Let\'s play level', data.numLevel);
+
+    var $iframe = document.querySelector('.game-level');
+    $iframe.addEventListener('load', function (e) {
+      // iframe was loaded, now wait for hype
+      e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
+    });
+    $iframe.src = levels[data.numLevel % levels.length];
 
     _.map(data.players, playerBuffer.onConnected, playerBuffer);
     // Don't work with server state before player initialization has happened.
@@ -113,12 +130,22 @@
   }
 
   function onGameEvent(data) {
-    console.log('Got event:', data.eventName);
+    if (data.eventName !== 'mouseMove') {
+      console.log('Got event:', data);
+    }
     gameInstance.triggerEvent(data);
   }
 
   playerBuffer.init();
   socket.on('connected', onConnected);
+  socket.on('error', function(){
+    console.log("error while connecting to socket server, using fake player data");
+    onConnected({
+        id: "playerId",
+        numLevel: 0,
+        players: []
+    });
+  });
 
   function afterHypeLoaded () {
     gameInstance = new GameController(document.querySelector('.game-level'), player.id);
@@ -126,8 +153,6 @@
 
     // local loop-back
     gameInstance.onTriggerEvent = function (event) {
-      gameInstance.triggerEvent(event);
-
       // TODO: Replace me
       // This is inefficient and should probably be replaced with either a count
       // down latch-ish synchronization primitive or two promises, so we can
@@ -137,7 +162,9 @@
         gameInstance.playerId = player.id;
       }
 
-      console.log('Emitting', event.eventName);
+      if (event.eventName !== 'mouseMove') {
+        console.log('Emitting', event.eventName);
+      }
       socket.emit('game event', event);
     };
 
@@ -147,8 +174,6 @@
     };
 
     gameInstance.onOwnMouseMove = function onOwnMouseMove(event) {
-      console.log('own mouse move');
-
       player.pointer.move(event.args[0], event.args[1]);
     };
 
@@ -174,9 +199,4 @@
     socket.on('player disconnected', onPlayerDisconnected);
     socket.on('game event', onGameEvent);
   }
-
-  document.querySelector('.game-level').addEventListener('load', function (e) {
-    // iframe was loaded, now wait for hype
-    e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
-  });
 }());

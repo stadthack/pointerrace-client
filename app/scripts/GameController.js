@@ -54,7 +54,9 @@
           eventName: "enterState",
           args: [name]
         });
-        return _this.originalHypeDocMethods["showSceneNamed"](name);
+        if (name !== "level") {
+          return _this.originalHypeDocMethods["showSceneNamed"](name);
+        }
       };
       adjustSizeOfIFrame = function() {
         var f, transform;
@@ -104,14 +106,22 @@
     };
 
     _Class.prototype.triggerEvent = function(gameEvent) {
+      var callback;
       switch (gameEvent.eventName) {
         case "mouseMove":
           return this.onMouseMove(gameEvent);
         case "enterState":
+          console.log(gameEvent);
           if (gameEvent.args[0] === "level" && gameEvent.playerId === this.playerId) {
             return this.originalHypeDocMethods["showSceneNamed"].apply(this.hypeDoc, gameEvent.args);
           }
           break;
+        case "loadNextLevel":
+          console.log("Loading next level", gameEvent.args['numLevel']);
+          callback = function() {
+            return window.location.reload();
+          };
+          return setTimeout(callback, 2500);
         default:
           return this.originalHypeDocMethods[gameEvent.eventName].apply(this.hypeDoc, _.map(gameEvent.args, _.identity));
       }

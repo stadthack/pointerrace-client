@@ -34,7 +34,8 @@
         playerId: @playerId
         eventName: "enterState"
         args: [name]
-      @originalHypeDocMethods["showSceneNamed"](name)
+
+      @originalHypeDocMethods["showSceneNamed"](name) unless name == "level"
 
     adjustSizeOfIFrame = () =>
       f = Math.min($(window).width() / 1280, $(window).height() / 720)
@@ -77,7 +78,12 @@
     switch gameEvent.eventName
       when "mouseMove" then @onMouseMove(gameEvent)
       when "enterState"
+        console.log(gameEvent)
         if gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
           @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, gameEvent.args)
+      when "loadNextLevel"
+        console.log("Loading next level", gameEvent.args['numLevel'])
+        callback = -> window.location.reload()
+        setTimeout callback, 2500
       else
         @originalHypeDocMethods[gameEvent.eventName].apply(@hypeDoc, _.map(gameEvent.args, _.identity))
