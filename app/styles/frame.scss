@@ -17,7 +17,7 @@ body {
   display: inline-block;
   width: 48px;
   min-height: 48px;
-  opacity: 0.7;
+  opacity: 0.6;
   background-image: image_url("pointer.svg");
   background-size: 100% 100%;
   background-position: -10px 0;
@@ -29,6 +29,8 @@ body {
   z-index: 2;
   pointer-events: none;
 
+
+
   &.flashing {
     animation: flashing 0.7s infinite;
     animation-fill-mode: both;
@@ -36,6 +38,12 @@ body {
 
   &:not(.pointer-self) {
     transition: transform 0.02s linear;
+    width: 32px;
+    width: 32px;
+  }
+
+  &.pointer-self {
+    opacity: 1;
   }
 }
 
