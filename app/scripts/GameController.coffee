@@ -5,12 +5,26 @@
     @originalHypeDocMethods = {}
     @playerId = @playerId
     @otherPlayers = {}
+    @lastCursorPos = null
+
+    cheatingDetected = () =>
+      console.log "CHEATING"
+      @hypeDoc.showSceneNamed "retry"
 
     $(@iFrameElement.contentWindow).mousemove (e) =>
+      maxDiff = 300
+      newPos = [e.pageX, e.pageY]
+
+      if @lastCursorPos?
+        delta = Math.abs(@lastCursorPos[0] - newPos[0]) + Math.abs(@lastCursorPos[1] - newPos[1])
+        if delta > maxDiff
+          cheatingDetected()
+      @lastCursorPos = newPos
+
       @onOwnMouseMove
         playerId: @playerId
         eventName: "mouseMove"
-        args: [e.pageX, e.pageY]
+        args: @lastCursorPos
 
       @onTriggerEvent
         playerId: @playerId
@@ -65,10 +79,8 @@
     $(window).resize adjustSizeOfIFrame
     adjustSizeOfIFrame()
 
-    preventUnfocus = () =>
-      @hypeDoc.showSceneNamed "retry"
 
-    window.addEventListener 'blur', preventUnfocus
+    window.addEventListener 'blur', cheatingDetected
 
   onTriggerEvent: (gameEvent) =>
 
