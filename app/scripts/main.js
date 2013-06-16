@@ -8,8 +8,9 @@
     this.startup();
   };
   var levels = [
-//    'hype/GreenLevel.html',
-    'hype/TestLevel.html',
+    // Multiple levels are disabled until events are fixed again.
+    // 'hype/GreenLevel.html',
+    'hype/TestLevel.html'
   ];
   var gameInstance = null;
   var playerBuffer = {

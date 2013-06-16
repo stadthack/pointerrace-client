@@ -1,4 +1,5 @@
 /*global describe, it, beforeEach, GameController, expect */
+/* jshint -W024,-W030 */
 'use strict';
 (function () {
   describe('GameController', function () {
