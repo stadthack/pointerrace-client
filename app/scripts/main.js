@@ -10,8 +10,9 @@
   var levels = [
     // Multiple levels are disabled until events are fixed again.
     // 'hype/GreenLevel.html',
-    'hype/Level.html?level=TestLevel',
-    'hype/Level.html?level=Level01'
+    'hype/Level.html?level=Level01',
+    'hype/Level.html?level=Level02',
+    'hype/Level.html?level=Level03'
   ];
   var gameInstance = null;
   var playerBuffer = {
