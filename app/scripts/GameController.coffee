@@ -29,6 +29,8 @@
               "showSceneNamed"]
       patch(m)
 
+    # do not propagate change (back) to level
+    # initial start will be announced from server in @triggerEvent()
     @hypeDoc["showSceneNamed"] = (name) =>
       @onTriggerEvent
         playerId: @playerId
@@ -36,6 +38,17 @@
         args: [name]
 
       @originalHypeDocMethods["showSceneNamed"](name) unless name == "level"
+
+    # do not propagate changes in Main Timeline
+    @hypeDoc["goToTimeInTimelineNamed"] = (time, name) =>
+      if name != "Main Timeline"
+        @onTriggerEvent
+          playerId: @playerId
+          eventName: "goToTimeInTimelineNamed"
+          args: [time, name]
+
+      @originalHypeDocMethods["goToTimeInTimelineNamed"](time, name)
+
 
     adjustSizeOfIFrame = () =>
       f = Math.min($(window).width() / 1280, $(window).height() / 720)
