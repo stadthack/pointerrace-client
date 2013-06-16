@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  var socketHost = typeof(window) === "undefined" ? "localhost" : window.location.host.split(":")[0];
+  var socketHost = typeof(window) === 'undefined' ? 'localhost' : window.location.host.split(':')[0];
   var socket = io.connect('http://' + socketHost + ':8080');
   var PlayerState = function () {
     this.startup();
@@ -139,11 +139,11 @@
   playerBuffer.init();
   socket.on('connected', onConnected);
   socket.on('error', function(){
-    console.log("error while connecting to socket server, using fake player data");
+    console.warn('error while connecting to socket server, using fake player data');
     onConnected({
-        id: "playerId",
-        numLevel: 0,
-        players: []
+      id: 'playerId',
+      numLevel: 0,
+      players: []
     });
   });
 
