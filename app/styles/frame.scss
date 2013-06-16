@@ -33,6 +33,10 @@ body {
     animation: flashing 0.7s infinite;
     animation-fill-mode: both;
   }
+
+  &:not(.pointer-self) {
+    transition: transform 0.02s linear;
+  }
 }
 
 div.hype_container {
