@@ -138,6 +138,14 @@
 
   playerBuffer.init();
   socket.on('connected', onConnected);
+  socket.on('error', function(){
+    console.log("error while connecting to socket server, using fake player data");
+    onConnected({
+        id: "playerId",
+        numLevel: 0,
+        players: []
+    });
+  });
 
   function afterHypeLoaded () {
     gameInstance = new GameController(document.querySelector('.game-level'), player.id);
