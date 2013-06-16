@@ -284,6 +284,14 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
+            svg_dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/images',
+                    src: '{,*/}*.svg',
+                    dest: '<%= yeoman.dist %>/images'
+                }]
+            },
             styles: {
                 expand: true,
                 dot: true,
@@ -309,7 +317,8 @@ module.exports = function (grunt) {
                 'compass',
                 'copy:styles',
                 'imagemin',
-                'svgmin',
+//                'svgmin',  --- breaks pointer.svg
+                'copy:svg_dist',
                 'htmlmin'
             ]
         }
