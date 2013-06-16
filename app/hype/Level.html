@@ -7,8 +7,13 @@
 	<title>Pointer Race! AWESOME</title>
 
     <script type="text/javascript">
+        var levelName = location.search.substr(1).split("=")[1];
+        console.log("levelName", levelName);
+
         function hypeDocument(){
-            return HYPE.documents.TestLevel;
+            if(typeof HYPE === "undefined")
+                return undefined;
+            return HYPE.documents[levelName];
         }
 
         function afterHypeLoaded(callback) {
@@ -21,13 +26,24 @@
                 window.HYPE_eventListeners.push({"type":"HypeDocumentLoad", "callback":callback});
             }
         }
-
     </script>
 
   </head>
   <body>
-	<div id="testlevel_hype_container" style="position:relative;overflow:hidden;width:1280px;height:720px;">
-		<script type="text/javascript" charset="utf-8" src="TestLevel.hyperesources/testlevel_hype_generated_script.js?87756"></script>
-	</div>
   </body>
+<script>
+    var div = document.createElement("div");
+    div.id = levelName.toLowerCase() + "_hype_container";
+    div.style.position = "relative";
+    div.style.overflow = "hidden";
+    div.style.width = "1280px";
+    div.style.height = "720px";
+
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = levelName+".hyperesources/" + levelName.toLowerCase() + "_hype_generated_script.js?87756";
+    div.appendChild(script);
+
+    document.body.appendChild(div);
+</script>
 </html>
