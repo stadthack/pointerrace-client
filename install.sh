@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Path is: $PATH"
+
 npm install
 npm install bower
 npm install grunt-cli
