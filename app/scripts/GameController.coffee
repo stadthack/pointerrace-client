@@ -31,11 +31,11 @@
 
     # do not propagate change (back) to level
     # initial start will be announced from server in @triggerEvent()
-    @hypeDoc["showSceneNamed"] = (name) =>
+    @hypeDoc["showSceneNamed"] = (name, optTime) =>
       @onTriggerEvent
         playerId: @playerId
         eventName: "enterState"
-        args: [name]
+        args: [name, optTime]
 
       @originalHypeDocMethods["showSceneNamed"](name) unless name == "level"
 
@@ -93,8 +93,11 @@
       when "enterState"
         console.log(gameEvent)
         if gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
-          @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, gameEvent.args)
-      when "loadNextLevel"
+          @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, [gameEvent.args[0]])
+          if gameEvent.args[1]?
+            console.log "going to time", gameEvent.args[1]
+            @originalHypeDocMethods["goToTimeInTimelineNamed"].apply(@hypeDoc, [gameEvent.args[1], "Main Timeline"])
+      when "loadNextLevel" 
         console.log("Loading next level", gameEvent.args['numLevel'])
         callback = -> window.location.reload()
         setTimeout callback, 2500
