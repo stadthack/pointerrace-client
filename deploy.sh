@@ -1,7 +1,6 @@
 #!/bin/bash
+echo "This file need environment Variables"
 
-npm install
-npm install bower
-npm install grunt-cli
-node_modules/bower/bin/bower install
-node_modules/grunt-cli/bin/grunt build
+echo "Copy Files to $TARGET_HOST:$TARGET_DIR"
+rsync --delete-delay -vrz --progress * $TARGET_HOST:$TARGET_DIR || exit 1
+ssh $TARGET_HOST "cd $TARGET_DIR && bash install.sh"
