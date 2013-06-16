@@ -204,6 +204,16 @@
       }
     };
 
+    gameInstance.onOtherPlayerLevelEvent = function (event) {
+      var pointer;
+      if (event.playerId === player.id) {
+        pointer = player.pointer;
+      } else {
+        pointer = gameInstance.otherPlayers[event.playerId].pointer;
+      }
+      pointer.setFlashing(event.args[0] === 'retry');
+    };
+
     playerBuffer.apply();
     socket.on('player connected', onPlayerConnected);
     socket.on('player disconnected', onPlayerDisconnected);

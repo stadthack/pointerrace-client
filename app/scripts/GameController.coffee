@@ -74,6 +74,8 @@
 
   onOtherPlayerRemove: (player) =>
 
+  onOtherPlayerLevelEvent: (player) =>
+
   removePlayerWithId: (playerId) =>
     p = @otherPlayers[playerId]
     if p?
@@ -94,10 +96,13 @@
         console.log(gameEvent)
         if gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
           @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, [gameEvent.args[0]])
+          @onOtherPlayerLevelEvent gameEvent
           if gameEvent.args[1]?
             console.log "going to time", gameEvent.args[1]
             @originalHypeDocMethods["goToTimeInTimelineNamed"].apply(@hypeDoc, [gameEvent.args[1], "Main Timeline"])
-      when "loadNextLevel" 
+        else if gameEvent.args[0] == "level" or gameEvent.args[0] == "retry"
+          @onOtherPlayerLevelEvent gameEvent
+      when "loadNextLevel"
         console.log("Loading next level", gameEvent.args['numLevel'])
         callback = -> window.location.reload()
         setTimeout callback, 2500
