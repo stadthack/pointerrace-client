@@ -6,8 +6,11 @@
     @playerId = @playerId
     @otherPlayers = {}
     @lastCursorPos = null
+    @gameStarted = false
 
     cheatingDetected = () =>
+      return unless @gameStarted
+
       console.log "CHEATING"
       @hypeDoc.showSceneNamed "retry"
 
@@ -117,6 +120,7 @@
       when "enterState"
         console.log(gameEvent)
         if gameEvent.args[0] == "level" and gameEvent.playerId == @playerId
+          @gameStarted = true
           @originalHypeDocMethods["showSceneNamed"].apply(@hypeDoc, [gameEvent.args[0]])
           @onOtherPlayerLevelEvent gameEvent
           if gameEvent.args[1]?
