@@ -13,6 +13,7 @@
     'hype/Level.html?level=Level01',
     'hype/Level.html?level=Level02',
     'hype/Level.html?level=Level03',
+    'hype/Level.html?level=Level04',
     'hype/Level.html?level=Level05'
 
   ];
