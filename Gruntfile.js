@@ -125,7 +125,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= yeoman.app %>/scripts',
                     src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
+                    dest: '<%= yeoman.app %>/scripts',
                     ext: '.js'
                 }]
             },
@@ -272,7 +272,8 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.{webp,gif}',
-                        'styles/fonts/*'
+                        'styles/fonts/*',
+                        'hype/**',
                     ]
                 }, {
                     expand: true,
