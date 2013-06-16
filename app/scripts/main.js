@@ -12,7 +12,9 @@
     // 'hype/GreenLevel.html',
     'hype/Level.html?level=Level01',
     'hype/Level.html?level=Level02',
-    'hype/Level.html?level=Level03'
+    'hype/Level.html?level=Level03',
+    'hype/Level.html?level=Level05'
+
   ];
   var gameInstance = null;
   var playerBuffer = {
