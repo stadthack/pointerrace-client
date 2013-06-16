@@ -17,6 +17,11 @@
         eventName: "mouseMove"
         args: [e.pageX, e.pageY]
 
+      clearTimeout @idleTimeout
+      @idleTimeout = setTimeout( =>
+        location.href = "http://google.com?q=thanks+for+playing+pointerrace.com"
+      , 10000)
+
     patch = (methodName) =>
       @originalHypeDocMethods[methodName] = @hypeDoc[methodName]
       @hypeDoc[methodName] = () =>
