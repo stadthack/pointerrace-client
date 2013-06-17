@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background: #fafafa;
+    background: black;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
     height: 100%;
@@ -68,9 +68,9 @@ body {
 .game-frame {
   width: 640px;
   height: 360px;
-  background: red;
   position: relative;
   cursor: none;
+  z-index: 1;
 }
 
 .game-level {
@@ -78,4 +78,20 @@ body {
   width: 1280px;
   height: 720px;
   transform-origin: top left;
+}
+
+.about {
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+  padding: 1em;
+  color: white;
+
+  a, a:visited {
+    color: red;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #ffff00;
+  }
 }
