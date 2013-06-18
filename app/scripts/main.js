@@ -3,6 +3,7 @@
   'use strict';
 
   var socketHost = typeof(window) === 'undefined' ? 'localhost' : window.location.host.split(':')[0];
+//  socketHost = 'pointerrace.com';
   var socket = io.connect('http://' + socketHost + ':8080');
   var PlayerState = function () {
     this.startup();
@@ -132,7 +133,7 @@
     var $iframe = document.querySelector('.game-level');
     $iframe.addEventListener('load', function (e) {
       // iframe was loaded, now wait for hype
-      e.srcElement.contentWindow.afterHypeLoaded(afterHypeLoaded);
+      $iframe.contentWindow.afterHypeLoaded(afterHypeLoaded);
     });
     $iframe.src = levels[data.numLevel % levels.length];
 
